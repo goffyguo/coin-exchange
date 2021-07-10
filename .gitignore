@@ -1,0 +1,19 @@
+# Project exclude paths
+/coin-admin/admin-api/target/
+/coin-admin/admin-service/target/
+/coin-chan/chan-api/target/
+/coin-chan/chan-service/target/
+/coin-common/target/
+/coin-finance/finance-api/target/
+/coin-finance/finance-service/target/
+/coin-iaas/authorization-server/target/
+/coin-iaas/gateway-server/target/
+/coin-member/member-api/target/
+/coin-member/member-service/target/
+/coin-statistics/statistics-api/target/
+/coin-statistics/statistics-service/target/
+/coin-task/target/
+/exchange-engine/exchange-api/target/
+/exchange-engine/exchange-service/target/
+/match-engine/match-api/target/
+/match-engine/match-service/target/

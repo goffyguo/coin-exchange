@@ -1,0 +1,19 @@
+server:
+  port: 9999
+
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 120.46.149.32:8848
+  application:
+    name: authorization-server
+#  redis:
+#    host: 120.46.149.32
+#    port: 6380
+#    password: guofei??
+  datasource:
+    url: jdbc:mysql://120.46.149.32:3307/coin-exchange?useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: guofei??
+    driver-class-name: com.mysql.cj.jdbc.Driver

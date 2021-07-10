@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: admin-service
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      server-addr: 120.46.149.32:8848
+      config:
+        file-extension: yaml
