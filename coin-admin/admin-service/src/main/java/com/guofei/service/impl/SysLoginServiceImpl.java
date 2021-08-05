@@ -14,6 +14,7 @@ import com.guofei.service.SysMenuService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,6 +23,7 @@ import org.springframework.security.jwt.JwtHelper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -44,6 +46,10 @@ public class SysLoginServiceImpl implements SysLoginService {
     @Value("${basic.token:Basic Y29pbi1hcGk6Y29pbi1zZWNyZXQ=}")
     private String basicToken;
 
+    @Autowired
+    private StringRedisTemplate redisTemplate ;
+
+
     /**
      * 登录的实现
      *
@@ -63,6 +69,7 @@ public class SysLoginServiceImpl implements SysLoginService {
         log.info("远程调用授权服务器成功，获取的token为{}", JSON.toJSONString(jwtToken, true));
         String token = jwtToken.getAccessToken();
 
+
         // 2、查询菜单数据
         Jwt jwt = JwtHelper.decode(token);
         String jwtTokenStr = jwt.getClaims();
@@ -75,7 +82,10 @@ public class SysLoginServiceImpl implements SysLoginService {
         List<SimpleGrantedAuthority> collect = authorities.stream()
                                                 .map(au -> new SimpleGrantedAuthority(au.toString()))
                                                 .collect(Collectors.toList());
-
-        return new LoginResult(token,menus,collect);
+        log.info("--redisTemplate--",redisTemplate);
+        // 1、将token存储在redis里面，配置网管做jwt的校验
+        redisTemplate.opsForValue().set(token,"",jwtToken.getExpiresIn(), TimeUnit.SECONDS);
+        // 2、返回给前端的Token 少一个bearer:
+        return new LoginResult(jwtToken.getTokenType()+" "+token,menus,collect);
     }
 }

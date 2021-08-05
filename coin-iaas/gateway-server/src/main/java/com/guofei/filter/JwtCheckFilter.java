@@ -1,6 +1,7 @@
 package com.guofei.filter;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -8,6 +9,7 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -27,13 +29,14 @@ import java.util.Set;
  * @Description:
  */
 @Component
+@Slf4j
 public class JwtCheckFilter implements GlobalFilter, Ordered {
 
     @Value("${no.token.access.urls:/admin/login,/admin/validate/code}")
     private Set<String> noTokenAccessUrls;
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private StringRedisTemplate redisTemplate;
     /**
      * 该过滤器拦截到用户请求处理
      * @param exchange
@@ -52,7 +55,8 @@ public class JwtCheckFilter implements GlobalFilter, Ordered {
 
         // 3、判断token以否有效
         Boolean aBoolean = redisTemplate.hasKey(token);
-
+        log.info("--redisTemplate--",redisTemplate);
+        //Boolean aBoolean = true;
         if (aBoolean!=null && aBoolean){
             return chain.filter(exchange);
         }
@@ -85,6 +89,7 @@ public class JwtCheckFilter implements GlobalFilter, Ordered {
     private boolean allowNoTokenAccess(ServerWebExchange exchange) {
         String path = exchange.getRequest().getURI().getPath();
         if (noTokenAccessUrls.contains(path)){
+            // 不需要token
             return false;
         }
         return true;
@@ -97,7 +102,8 @@ public class JwtCheckFilter implements GlobalFilter, Ordered {
      */
     private String getUserToken(ServerWebExchange exchange) {
         String token = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-        return token==null ? null : token.replace("bearer: ","");
+        return token ==null ? null : token.replace("bearer ","") ;
+
     }
 
     @Override

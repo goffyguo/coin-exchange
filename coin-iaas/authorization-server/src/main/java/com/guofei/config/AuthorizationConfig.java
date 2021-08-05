@@ -101,7 +101,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
                 .userDetailsService(userDetailsService)
                 .tokenStore(jwtTokenStore())
                 // 允许post提交
-                .allowedTokenEndpointRequestMethods(HttpMethod.POST)
+                //.allowedTokenEndpointRequestMethods(HttpMethod.POST)
                 .tokenEnhancer(jwtAccessTokenConverter())
         ;
         super.configure(endpoints);
