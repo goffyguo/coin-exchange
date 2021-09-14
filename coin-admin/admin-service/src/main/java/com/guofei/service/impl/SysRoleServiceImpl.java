@@ -1,5 +1,7 @@
 package com.guofei.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
@@ -30,5 +32,12 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Page<SysRole> findByPage(Page<SysRole> page, String name) {
+        return page(page,new LambdaQueryWrapper<SysRole>().like(
+                !StringUtils.isEmpty(name), SysRole::getName, name
+        ));
     }
 }

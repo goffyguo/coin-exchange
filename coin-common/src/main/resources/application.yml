@@ -1,0 +1,32 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: infocent-common
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://120.46.149.32:3307/coin-exchange?serverTimezone=GMT%2B8
+    username: root
+    password: guofei??
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 120.46.149.32:8848
+      config:
+        enabled: false
+
+  redis:
+    host: 120.46.149.32
+    port: 6380
+    password: guofei??
+
+swagger2:
+  basePackage: com.infocent.*.controller
+  name: GuoFei
+  url: GuoFei.com
+  email: GuoFei.gmail.com
+  title: Swagger Document
+  description: Swagger Document
+  version: 1.0
+  termsOfServiceUrl: infocent.com

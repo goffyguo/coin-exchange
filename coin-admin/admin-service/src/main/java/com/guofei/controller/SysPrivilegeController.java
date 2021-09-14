@@ -10,12 +10,13 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -54,5 +55,42 @@ public class SysPrivilegeController {
         Page<SysPrivilege> sysPrivilegePage = sysPrivilegeService.page(page);
         return R.ok(sysPrivilegePage);
     }
+
+    @PostMapping
+    @ApiOperation(value = "新增一个权限")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "sysPrivilege",value = "sysPrivilege 的json数据")
+    })
+    @PreAuthorize("hasAnyAuthority('sys_privilege_create')")
+    public R add(@RequestBody @Validated SysPrivilege sysPrivilege){
+        // 自动填充
+        /*String userIdStr = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        sysPrivilege.setCreateBy(Long.valueOf(userIdStr));
+        sysPrivilege.setCreated(new Date());
+        sysPrivilege.setLastUpdateTime(new Date());*/
+        boolean save = sysPrivilegeService.save(sysPrivilege);
+        if (save){
+            return R.ok("insert success");
+        }
+        return R.fail("insert fail");
+    }
+    @PatchMapping
+    @ApiOperation(value = "修改一个权限")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "sysPrivilege",value = "sysPrivilege 的json数据")
+    })
+    @PreAuthorize("hasAnyAuthority('sys_privilege_update')")
+    public R update(@RequestBody @Validated SysPrivilege sysPrivilege){
+        // 自动填充
+        /*String userIdStr = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        sysPrivilege.setModifyBy(Long.valueOf(userIdStr));
+        sysPrivilege.setLastUpdateTime(new Date());*/
+        boolean save = sysPrivilegeService.updateById(sysPrivilege);
+        if (save){
+            return R.ok("update success");
+        }
+        return R.fail("update fail");
+    }
+
 
 }
