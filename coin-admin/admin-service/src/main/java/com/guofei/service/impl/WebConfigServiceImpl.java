@@ -1,5 +1,6 @@
 package com.guofei.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
@@ -16,4 +17,8 @@ import com.guofei.service.WebConfigService;
 @Service
 public class WebConfigServiceImpl extends ServiceImpl<WebConfigMapper, WebConfig> implements WebConfigService{
 
+    @Override
+    public Page<WebConfig> findByPage(Page<WebConfig> page, String name, String type) {
+        return null;
+    }
 }

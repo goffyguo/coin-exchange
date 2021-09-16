@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -84,5 +85,35 @@ public class NoticeController {
         }
         return R.fail("修改失败");
     }
+    @PostMapping
+    @ApiOperation(value = "新增一个公告")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "notice" ,value = "notice的json数据")
+    })
+    @PreAuthorize("hasAuthority('notice_create')")
+    public R add(@RequestBody @Validated Notice notice){
+        notice.setStatus(1);
+        boolean save = noticeService.save(notice); //
+        if(save){
+            return R.ok();
+        }
+        return  R.fail("新增公告失败") ;
+    }
+    @PatchMapping
+    @ApiOperation(value = "修改一个公告")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "notice" ,value = "notice的json数据")
+    })
+    @PreAuthorize("hasAuthority('notice_update')")
+    public R update(@RequestBody  @Validated  Notice notice){
+        boolean update = noticeService.updateById(notice);
+        if(update){
+            return R.ok();
+        }
+        return  R.fail("修改公告失败") ;
+
+    }
+
+
 
 }
