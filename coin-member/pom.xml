@@ -15,6 +15,13 @@
         <module>member-api</module>
         <module>member-service</module>
     </modules>
+    <dependencies>
+        <dependency>
+            <groupId>org.goffy</groupId>
+            <artifactId>coin-common</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>
 
 
 
