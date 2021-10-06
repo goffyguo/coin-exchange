@@ -1,5 +1,6 @@
 package com.guofei.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.guofei.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
     /**
@@ -11,4 +12,18 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface UserService extends IService<User>{
 
 
-}
+    /**
+     *
+     * @param page
+     * @param mobile
+     * @param userId
+     * @param userName
+     * @param realName
+     * @param status
+     * @return
+     */
+    Page<User> findByPage(Page<User> page, String mobile,
+                          Long userId, String userName,
+                          String realName, Integer status);
+
+    }
