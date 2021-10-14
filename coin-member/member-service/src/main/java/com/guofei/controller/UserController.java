@@ -10,8 +10,8 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
@@ -53,5 +53,37 @@ public class UserController {
         page.addOrder(OrderItem.desc("last_update_time")) ;
         Page<User> userPage = userService.findByPage(page,mobile,userId,userName,realName,status) ;
         return R.ok(userPage) ;
+    }
+
+    @PostMapping("/status")
+    @ApiOperation(value = "修改用户的状态")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id",value = "会员的id"),
+            @ApiImplicitParam(name = "status",value = "会员的状态")
+    })
+    @PreAuthorize("hasAuthority('user_update')")
+    public R updateStatus(Long id,Byte status){
+        User user = new User();
+        user.setId(id);
+        user.setStatus(status);
+        boolean b = userService.updateById(user);
+        if (b){
+            return R.ok("更新成功");
+        }
+        return R.fail("更新失败");
+    }
+
+    @PatchMapping
+    @ApiOperation(value = "修改用户")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "user",value = "会员的json数据")
+    })
+    @PreAuthorize("hasAuthority('user_update')")
+    public R updateUser(@RequestBody @Validated User user){
+        boolean b = userService.updateById(user);
+        if (b){
+            return R.ok("更新成功");
+        }
+        return R.fail("更新失败");
     }
 }
